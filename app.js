@@ -4,6 +4,7 @@ const Todo = require('./models/todo')
 const mongoose = require('mongoose')
 const app = express()
 const port = 3000
+const methodOverride = require('method-override')
 
 mongoose.connect('mongodb://localhost/todo-list', { useNewUrlParser: true }, { useUnifiedTopology: true })
 const db = mongoose.connection
@@ -19,6 +20,7 @@ db.once('open', () => {
 app.engine('hbs', exphbs.engine({defaultLayout: 'main', extname: '.hbs'}))
 app.set('view engine', 'hbs')
 app.use(express.urlencoded({ extended:true }))
+app.use(methodOverride('_method'))
 
 app.get('/', (req, res) => {
   Todo.find()
@@ -55,7 +57,7 @@ app.get('/todos/:id/edit', (req, res) => {
     .catch(error => console.log(error))
 })
 
-app.post('/todos/:id/edit', (req, res) => {
+app.put('/todos/:id', (req, res) => {
   const id = req.params.id
   const { name, isDone } = req.body
   return Todo.findById(id)
@@ -68,7 +70,7 @@ app.post('/todos/:id/edit', (req, res) => {
     .catch(error => console.log(error))
 })
 
-app.post('/todos/:id/delete', (req, res) => {
+app.delete('/todos/:id', (req, res) => {
   const id = req.params.id
   return Todo.findById(id)
     .then(todo => todo.remove())
