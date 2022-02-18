@@ -3,6 +3,7 @@ const exphbs = require('express-handlebars')
 const app = express()
 const PORT = process.env.PORT || 3000
 const methodOverride = require('method-override')
+const session = require('express-session')
 
 const routes = require('./routes')
 require('./config/mongoose')
@@ -11,6 +12,11 @@ app.engine('hbs', exphbs.engine({defaultLayout: 'main', extname: '.hbs'}))
 app.set('view engine', 'hbs')
 app.use(express.urlencoded({ extended:true }))
 app.use(methodOverride('_method'))
+app.use(session({
+  secret: "ThisIsMySecret",
+  resave: false,
+  saveUninitialized: true
+}))
 
 app.use(routes)
 
