@@ -6,12 +6,15 @@ const methodOverride = require('method-override')
 const session = require('express-session')
 
 const routes = require('./routes')
+const usePassport = require('./config/passport')
 require('./config/mongoose')
+
 
 app.engine('hbs', exphbs.engine({defaultLayout: 'main', extname: '.hbs'}))
 app.set('view engine', 'hbs')
 app.use(express.urlencoded({ extended:true }))
 app.use(methodOverride('_method'))
+usePassport(app)
 app.use(session({
   secret: "ThisIsMySecret",
   resave: false,
